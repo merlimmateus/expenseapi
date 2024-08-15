@@ -1,5 +1,6 @@
 package com.expenseapi.expense.controllers;
 
+import com.expenseapi.expense.dto.AccountDTO;
 import com.expenseapi.expense.models.Account;
 import com.expenseapi.expense.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<Account>> getAllAccounts() {
+    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 

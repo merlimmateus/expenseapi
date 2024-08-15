@@ -1,5 +1,7 @@
 package com.expenseapi.expense.controllers;
 
+import com.expenseapi.expense.dto.LoginResponseDTO;
+import com.expenseapi.expense.dto.UserDTO;
 import com.expenseapi.expense.models.User;
 import com.expenseapi.expense.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +16,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User registeredUser = authService.register(user);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<UserDTO> register(@RequestBody User user) {
+        UserDTO registeredUserDTO = authService.register(user);
+        return ResponseEntity.ok(registeredUserDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
-        String token = authService.login(email, password);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<LoginResponseDTO> login(@RequestParam String email, @RequestParam String password) {
+        LoginResponseDTO response = authService.login(email, password);
+        return ResponseEntity.ok(response);
     }
 }

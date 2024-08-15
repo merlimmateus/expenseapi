@@ -1,5 +1,7 @@
 package com.expenseapi.expense.services;
 
+import com.expenseapi.expense.dto.LoginResponseDTO;
+import com.expenseapi.expense.dto.UserDTO;
 import com.expenseapi.expense.models.User;
 import com.expenseapi.expense.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -22,38 +24,45 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-
-    @Value("${jwt.expiration}")
-    private int jwtExpirationMs;
-
-    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-
-    public User register(User user) {
-        // Criptografar a senha antes de salvar
+    public UserDTO register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // Salvar o usuário no banco de dados
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new UserDTO(
+                savedUser.getId(),
+                savedUser.getName(),
+                savedUser.getEmail(),
+                savedUser.getCreatedAt(),
+                savedUser.getUpdatedAt()
+        );
     }
 
-    public String login(String email, String password) {
+    public LoginResponseDTO login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            return generateJwtToken(user);
+            String token = generateJwtToken(user);
+
+            UserDTO userDTO = new UserDTO(
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getCreatedAt(),
+                    user.getUpdatedAt()
+            );
+
+            return new LoginResponseDTO(token, userDTO);
         } else {
             throw new RuntimeException("Invalid credentials");
         }
     }
 
-    public String generateJwtToken(User user) {
+    private String generateJwtToken(User user) {
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
         return Jwts.builder()
                 .setSubject(user.getEmail())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key)
                 .compact();
     }
 }
