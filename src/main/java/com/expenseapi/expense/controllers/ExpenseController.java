@@ -1,5 +1,6 @@
 package com.expenseapi.expense.controllers;
 
+import com.expenseapi.expense.dto.ExpenseDTO;
 import com.expenseapi.expense.models.Expense;
 import com.expenseapi.expense.services.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +16,13 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
-    @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
-        return ResponseEntity.ok(expenseService.getAllExpenses());
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ExpenseDTO>> getExpensesByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(expenseService.getExpensesByUserId(userId));
     }
 
     @PostMapping
-    public ResponseEntity<Expense> createExpense(@RequestBody Expense expense) {
-        return ResponseEntity.ok(expenseService.createExpense(expense));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
-        return ResponseEntity.ok(expenseService.updateExpense(id, expense));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
-        expenseService.deleteExpense(id);
-        return ResponseEntity.ok("Expense deleted successfully");
+    public ResponseEntity<ExpenseDTO> createExpense(@RequestBody ExpenseDTO expenseDTO) {
+        return ResponseEntity.ok(expenseService.createExpense(expenseDTO));
     }
 }

@@ -1,7 +1,6 @@
 package com.expenseapi.expense.controllers;
 
 import com.expenseapi.expense.dto.AccountDTO;
-import com.expenseapi.expense.models.Account;
 import com.expenseapi.expense.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,18 +16,18 @@ public class AccountController {
     private AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        return ResponseEntity.ok(accountService.getAllAccounts());
+    public ResponseEntity<List<AccountDTO>> getAccountsByUserId(@RequestParam Long userId) {
+        return ResponseEntity.ok(accountService.getAccountsByUserId(userId));
     }
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        return ResponseEntity.ok(accountService.createAccount(account));
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO accountDTO) {
+        return ResponseEntity.ok(accountService.createAccount(accountDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account account) {
-        return ResponseEntity.ok(accountService.updateAccount(id, account));
+    public ResponseEntity<AccountDTO> updateAccount(@PathVariable Long id, @RequestBody AccountDTO accountDTO) {
+        return ResponseEntity.ok(accountService.updateAccount(id, accountDTO));
     }
 
     @DeleteMapping("/{id}")

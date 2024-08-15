@@ -10,9 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Getter
 @Setter
-@Data
 @Table(name = "expenses")
 public class Expense {
 
@@ -21,21 +21,18 @@ public class Expense {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     private BigDecimal amount;
-
-    private LocalDate date;
-
-    private Integer installments;
 
     private String description;
 
     private Boolean isFixed;
 
+    private LocalDateTime date;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt = LocalDateTime.now();
-
 }

@@ -19,5 +19,5 @@ public class AccountDTO {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<ExpenseDTO> expenses;
+    private Long userId;
 }
